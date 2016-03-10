@@ -39,3 +39,38 @@ docker-volume-netshare is a process that runs in the background. As of docker 1.
 Then when you create a volume (`docker volume create` or `docker run -v `), you specify the host address and credentials
 
 - `sudo docker-volume-netshare cifs` - leave it running in one window
+
+### Creating a volume
+
+Then when we create the volume there are arguments for username and password. This was an attempt to mount as dcl9 and hope for a password prompt, but it never came.
+
+    $ docker volume create -d cifs --name oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday --opt username=dcl9
+    oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday
+
+Now I'll use the gcbservice account since I don't mind putting the password on a CLI.
+
+This is trying to mount with guest
+
+`DEBU[0142] Executing: mount -t cifs -o guest,rw //oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday /var/lib/docker-volumes/netshare/cifs/oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday`
+
+Current documentation for docker-volume-netshare suggests that the credentials should be supplied when creating the volume, however this did not work. Instead it always tried to mount as `-o guest,rw`
+
+Did not work. Instead need to provide user and pass to the docker-volume-netshare process
+
+#### Working State!
+
+1. Run docker-volume-netshare (in an interactive terminal)
+  - `sudo docker-volume-netshare cifs --username=gcbservice --password=**** --verbose`
+  - Note: special characters in the password had to be escaped with 3 backslashes. So a `$` becomes `\\\$`
+  - We should probably use .netrc file for this instead, and see about running this process in background somehow
+2. Create a docker volume, the name is translated from the CIFS share:
+  - `docker volume create -d cifs --name oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday`
+3. With the volume created, run a container
+  - `docker run -it -v oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday:/docker-hackday ubuntu bash`
+
+#### Next steps
+
+- cleanup credential storage
+- install docker-volume-netshare as a service
+- NFS
+- kerb
