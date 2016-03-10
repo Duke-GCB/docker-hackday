@@ -77,6 +77,39 @@ Did not work. Instead need to provide user and pass to the docker-volume-netshar
 
 2. Then when running `docker-volume-netshare cifs`, you need not include the username and password
 
+#### kerberos
+
+Tried using kerberos security, which is supported by CIFS. However it seems the storage isn't configured or we don't know what realm to use...
+
+sudo apt-get install krb-user krb5-config
+
+    Realm: ACPUB.DUKE.EDU
+    Servers: kaserv1.acpub.duke.edu kaserv2.acpub.duke.edu kaserv3.acpub.duke.edu
+    Admin: kaserv1.acpub.duke.edu
+
+Trying to obtain a ticket and mount with kerberized, not having much luck
+
+    $ sudo kinit dcl9@ACPUB.DUKE.EDU
+    $ sudo kinit dcl9@WIN.DUKE.EDU
+    $ kinit dcl9@WIN.DUKE.EDU
+    $ kinit dcl9@ACPUB.DUKE.EDU
+
+Obtains a ticket and puts it in /tmp, but all attempts at trying mount with sec=krb5 fail with `Required key not available`
+
+    $ sudo mount -t cifs -o sec=krb5,user=dcl9 //oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday /mnt/krbmount --verbose
+    mount.cifs kernel mount options: ip=152.3.96.9,unc=\\oit-nas-nb12pub.oit.duke.edu\scratch,sec=krb5,user=dcl9,prefixpath=docker-hackday,pass=********
+    mount error(126): Required key not available
+    Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)
+
+Tried debugging with smbclient, but it can't seem to authenticate no matter what. Though it did provide some suggestive error messages
+
+    smbclient -k //oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday -v
+    ads_krb5_mk_req: smb_krb5_get_credentials failed for cifs/oit-nas-nb12pub.oit.duke.edu@OIT.DUKE.EDU (Server not found in Kerberos database)
+    cli_session_setup_kerberos: spnego_gen_krb5_negTokenInit failed: Server not found in Kerberos database
+    session setup failed: NT_STATUS_UNSUCCESSFUL
+
+#### Domain joining
+
 #### Next steps
 
 - ~~cleanup credential storage~~
