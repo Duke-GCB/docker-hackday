@@ -117,3 +117,5 @@ Tried debugging with smbclient, but it can't seem to authenticate no matter what
 - NFS
 - kerberos
 - permissions issues
+- automate configuration and installation - [ansible](https://github.com/Duke-GCB/gcb-ansible/tree/docker-volumes)
+
