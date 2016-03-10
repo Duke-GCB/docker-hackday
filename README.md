@@ -38,7 +38,7 @@ Additional resources:
 
 * [Data staging](data-staging.md): encapsulating storage in a container so that the provisioning protocol is abstracted out. (Dan L, Jack)
 * Container that can connect to a running database container and obtain and store a backup. (Dan S, Darren, John)
-* Trusted docker repositories, and signed images. (Hilmar)
+* [Trusted docker repositories, and signed images](trusted-images.md) (Hilmar)
 
 [Dan Leehr]: http://github.com/dleehr
 [Dan Somers]: http://github.com/dansomers
