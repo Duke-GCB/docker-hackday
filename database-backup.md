@@ -5,13 +5,15 @@ We would like to put the command in cron without including the password so we ca
 
 
 ## MariaDB
+### Backup using exec
 The mariadb container has environment variables for the MYSQL_* user/password etc.
 So we were able to run this:
 ```
 docker exec -i -t <name> sh -c 'mysqldump --password=$MYSQL_ROOT_PASSWORD --all-databases'
 ```
 Using ```sh --c '...'``` uses the environment variables in the container we are exec'ing in.
-
+### Backup to a volume
+https://github.com/Duke-GCB/mariadb-docker-backup
 
 ## Postgres
 ### Backup using exec
@@ -31,5 +33,4 @@ This one mounts /tmp/data2 on host and /var/lib/postgresql/data in container. PG
 docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -v /tmp/data2:/var/lib/postgresql/data -d postgres
 ```
 ### Backup to a volume
-I created a Dockerfile and script to create an image that will backup a postgres database to the specified volume.
 https://github.com/Duke-GCB/DockerPostgresBackup
