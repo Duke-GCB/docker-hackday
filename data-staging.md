@@ -14,3 +14,28 @@ General sketch
 6. Kerberize?!
 
 
+## Steps
+
+### Installing the volume plugin
+
+    sudo apt-get install -y nfs-common
+    wget https://dl.bintray.com//content/pacesys/docker/docker-volume-netshare_0.11_amd64.deb?direct
+    sudo dpkg -i docker-volume-netshare_0.11_amd64.deb
+
+
+
+### Editing configuration
+
+- `/etc/default/docker-volume-netshare`
+
+Has mount options for NFS in config file, including CIFS user and password options
+
+### Starting docker-volume-netshare
+
+https://github.com/gondor/docker-volume-netshare#docker-version-190
+
+docker-volume-netshare is a process that runs in the background. As of docker 1.9 and later, it is run with no arguments.
+
+Then when you create a volume (`docker volume create` or `docker run -v `), you specify the host address and credentials
+
+- `sudo docker-volume-netshare cifs` - leave it running in one window
