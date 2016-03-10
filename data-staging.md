@@ -73,4 +73,5 @@ Did not work. Instead need to provide user and pass to the docker-volume-netshar
 - cleanup credential storage
 - install docker-volume-netshare as a service
 - NFS
-- kerb
+- kerberos
+- permissions issues
