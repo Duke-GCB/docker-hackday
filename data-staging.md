@@ -34,11 +34,9 @@ Has mount options for NFS in config file, including CIFS user and password optio
 
 https://github.com/gondor/docker-volume-netshare#docker-version-190
 
-docker-volume-netshare is a process that runs in the background. As of docker 1.9 and later, it is run with no arguments.
+docker-volume-netshare is a process that runs in the background. According to the documentation, with docker 1.9 and later, it is run with only one argument (cifs or nfs). And the credentials are passed at time of volume creation.
 
-Then when you create a volume (`docker volume create` or `docker run -v `), you specify the host address and credentials
-
-- `sudo docker-volume-netshare cifs` - leave it running in one window
+However, this did not work in our testing, the username and password were required here.
 
 ### Creating a volume
 
@@ -68,9 +66,20 @@ Did not work. Instead need to provide user and pass to the docker-volume-netshar
 3. With the volume created, run a container
   - `docker run -it -v oit-nas-nb12pub.oit.duke.edu/scratch/docker-hackday:/docker-hackday ubuntu bash`
 
+#### NetRC files
+
+1. Create a .netrc file in your home directory, e
+
+        //.netrc
+        machine oit-nas-nb12pub.oit.duke.edu
+            username  dcl9
+            password  **********
+
+2. Then when running `docker-volume-netshare cifs`, you need not include the username and password
+
 #### Next steps
 
-- cleanup credential storage
+- ~~cleanup credential storage~~
 - install docker-volume-netshare as a service
 - NFS
 - kerberos
