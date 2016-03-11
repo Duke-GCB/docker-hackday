@@ -110,12 +110,23 @@ Tried debugging with smbclient, but it can't seem to authenticate no matter what
 
 #### Domain joining
 
+Dan S experimented here. Created a new linux VM and joined it to the domain. host was not able to access shares via kerberos either, mount failed with `Required key not available`
+
+#### File permissions issues
+
+- The mounted CIFS file system appears owned by root (UID 0) with permissions 755 on the docker host.
+- This is the default behavior when mounting CIFS when the server doesn't have the UNIX extensions enabled
+- When a docker container accesses volumes mounted this way, it also sees files/directories owned by root
+- If the docker container runs as a UID other than 0, it cannot write to the volume
+- This will be more complicated on NFS, as the UIDs may collide with UIDs on the share. But we didn't get very far with NFS.
+
 #### Next steps
 
-- ~~cleanup credential storage~~
-- install docker-volume-netshare as a service
-- NFS
-- kerberos
-- permissions issues
+- ~~cleanup credential storage~~ - Dan L - ansible, as clean as we can get it for now
+- ~~install docker-volume-netshare as a service~~ - Dan L - ansible
+- [NFS](nfs-prerequisites.md) - jack investigated
+- ~~kerberos~~ - Dan L and Dan S investigated
+- ~~domain joining~~ - Dan S investigated
+- permissions issues - documented above
 - automate configuration and installation - [ansible](https://github.com/Duke-GCB/gcb-ansible/tree/docker-volumes)
 
