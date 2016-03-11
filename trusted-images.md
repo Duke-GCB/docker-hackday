@@ -114,8 +114,35 @@ thus a default restrictive policy can be trivially disabled. Also,
 this method does not yield any of the end-user benefits of trusted
 images, such as strong provenance.
 
+## Further resources and background
+
+* Docker's content trust mode needs an additional software component,
+  named "[Notary]", released by Docker as open source. Notary itself
+  extends the [The Update Framework] (TUF), an open source system for
+  securely distributing software updates to systems. TUF in turn is
+  based on work funded by NSF, discussed in a [2010 CCS paper].
+* Once a user is privileged to create and run Docker containers on a
+  machine, it is rather impossible to force them to use *only* signed
+  images, unless Docker provided a means of restricting them to a
+  selected set of registries that only provide signed images. Such a
+  means was provided by Redhat ([Docker in RHEL 7.1]), but the
+  extension was [refused by the upstream Docker maintainers]. Instead,
+  the maintainers wished to use [their own proposal], which was closed
+  for re-examination in January 2016.
+
+## Acknowledgements
+
+* Victor J. Orlikowski for the write-up that surfaced most of the
+  further resources.
+
 [Docker Trusted Registry]: https://docs.docker.com/docker-trusted-registry/overview/
 [Docker Trusted Registry, Technical Brief]: https://www.docker.com/sites/default/files/Docker%20Trusted%20Registry.pdf
 [AppArmor profiles]: https://docs.docker.com/engine/security/apparmor/
 [Seccomp profiles]: https://docs.docker.com/engine/security/seccomp/
 [Docker supports "Content Trust"]: https://docs.docker.com/engine/security/trust/content_trust/
+[Notary]: https://github.com/docker/notary
+[The Update Framework]: https://theupdateframework.github.io
+[2010 CCS paper]: http://freehaven.net/~arma/tuf-ccs2010.pdf
+[Docker in RHEL 7.1]: http://rhelblog.redhat.com/2015/04/15/understanding-the-changes-to-docker-search-and-docker-pull-in-red-hat-enterprise-linux-7-1/
+[refused by the upstream Docker maintainers]: https://github.com/docker/docker/pull/13450
+[their own proposal]: https://github.com/docker/distribution/pull/303
