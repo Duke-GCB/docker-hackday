@@ -58,6 +58,43 @@ of the trusted one opt-in.
 
 ### Signed images
 
+Similar to code-signing as used for Java libraries, cryptographically
+signed Docker images would provide a way for trusting images (by
+accepting the signing key, similar to accepting ssh host keys in ssh
+connections), and for validating that an image was signed by a trusted
+party. This protects the end-user from possibly tampered with
+images. It also enables strong provenance, by providing strong
+evidence that an image used in a workflow is indeed from the purported
+source, and that when pulled again, it is indeed the same as was used
+previously.
+
+Since August 2015, [Docker supports "Content Trust"]. This works by
+signing _image tags_, not the images themselves. Content trust can be
+enabled for the Docker client by setting the environment variable
+`DOCKER_CONTENT_TRUST`, like so:
+
+```sh
+$ export DOCKER_CONTENT_TRUST=1
+```
+
+With this environment set, the Docker commands `push`, `build`,
+`create`, `pull`, and `run` require (or push or create) signed images
+with signatures that are accepted as trusted (like one would accept an
+ssh host key when connecting for the first time). More precisely, they
+require images with a _signed tag_. Not all tags of a Docker image
+repository need to be signed, and a tag (such as _latest_) may be
+signed at one point and published unsigned at another, providing the
+publisher of an image to signal reliability or other attributes as a
+convention by choosing which tags are and which are not signed.
+
+Signed tags could thus convey considerable benefits to the end user by
+enabling strong provenance. However, any attempt to enforce content
+trust mode can be trivially circumvented by the end-user. The Docker
+client accepts a command-line argument (`--disable-content-trust`)
+that disables it, and pulling an image by specifying its full SHA256
+hash always succeeds regardless of whether content trust is enabled or
+not.
+
 ### Security profiles
 
 Linux supports several technologies for secure computing mode
@@ -81,3 +118,4 @@ images, such as strong provenance.
 [Docker Trusted Registry, Technical Brief]: https://www.docker.com/sites/default/files/Docker%20Trusted%20Registry.pdf
 [AppArmor profiles]: https://docs.docker.com/engine/security/apparmor/
 [Seccomp profiles]: https://docs.docker.com/engine/security/seccomp/
+[Docker supports "Content Trust"]: https://docs.docker.com/engine/security/trust/content_trust/
